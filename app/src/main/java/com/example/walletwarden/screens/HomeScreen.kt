@@ -172,11 +172,10 @@ fun HomeScreen() {
                     if (showDeleteConfirmationDialog.value) {
                         AlertDialog(
                             onDismissRequest = {
-                                // Handle dismiss action if needed
                                 showDeleteConfirmationDialog.value = false
                             },
-                            title = { Text("Confirm Deletion") },
-                            text = { Text("Are you sure you want to delete this item?") },
+                            title = { Text("You're about to delete this month") },
+                            text = { Text("But would you reconsider your decision?") },
                             confirmButton = {
                                 Button(
                                     onClick = {
@@ -184,14 +183,14 @@ fun HomeScreen() {
                                         showDeleteConfirmationDialog.value = false
                                     }
                                 ) {
-                                    Text("Confirm")
+                                    Text("Nah, I'd Delete")
                                 }
                             },
                             dismissButton = {
                                 Button(
                                     onClick = { showDeleteConfirmationDialog.value = false }
                                 ) {
-                                    Text("Cancel")
+                                    Text("Nigerundayoo")
                                 }
                             }
                         )
@@ -238,7 +237,8 @@ fun MonthItem(monthEntity: MonthEntity,
                     .fillMaxSize()){
                 Column(modifier = Modifier.padding(16.dp))
                 {
-                    Text(text = monthEntity.month)
+                    Text(text = monthEntity.month+" "+monthEntity.year)
+
                     Text(text = monthEntity.monthlyexp.toString())
                 }
                 Row(){
