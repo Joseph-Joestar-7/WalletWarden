@@ -168,8 +168,36 @@ fun HomeScreen() {
                 end.linkTo(parent.end)
             }) {
                 items(allMonths) { monthEntity ->
+                    val showDeleteConfirmationDialog = remember { mutableStateOf(false) }
+                    if (showDeleteConfirmationDialog.value) {
+                        AlertDialog(
+                            onDismissRequest = {
+                                // Handle dismiss action if needed
+                                showDeleteConfirmationDialog.value = false
+                            },
+                            title = { Text("Confirm Deletion") },
+                            text = { Text("Are you sure you want to delete this item?") },
+                            confirmButton = {
+                                Button(
+                                    onClick = {
+                                        homeViewModel.deleteMonth(monthEntity)
+                                        showDeleteConfirmationDialog.value = false
+                                    }
+                                ) {
+                                    Text("Confirm")
+                                }
+                            },
+                            dismissButton = {
+                                Button(
+                                    onClick = { showDeleteConfirmationDialog.value = false }
+                                ) {
+                                    Text("Cancel")
+                                }
+                            }
+                        )
+                    }
                     MonthItem(monthEntity = monthEntity,
-                        onDelete = {homeViewModel.deleteMonth(monthEntity)})
+                        onDelete = {showDeleteConfirmationDialog.value=true})
                 }
             }
             FloatingActionButton(modifier= Modifier
