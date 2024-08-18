@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Wallet Warden</string>
+    <string name="Current_Balance">Your Current Balance is </string>
+</resources>
