@@ -168,7 +168,8 @@ fun HomeScreen() {
                 end.linkTo(parent.end)
             }) {
                 items(allMonths) { monthEntity ->
-                    MonthItem(monthEntity = monthEntity)
+                    MonthItem(monthEntity = monthEntity,
+                        onDelete = {homeViewModel.deleteMonth(monthEntity)})
                 }
             }
             FloatingActionButton(modifier= Modifier
@@ -187,7 +188,8 @@ fun HomeScreen() {
 }
 
 @Composable
-fun MonthItem(monthEntity: MonthEntity) {
+fun MonthItem(monthEntity: MonthEntity,
+              onDelete:()->Unit) {
     Column(modifier = Modifier
         .fillMaxWidth()
         .padding(horizontal = 8.dp)
@@ -212,7 +214,7 @@ fun MonthItem(monthEntity: MonthEntity) {
                     Text(text = monthEntity.monthlyexp.toString())
                 }
                 Row(){
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = onDelete) {
                         Icon(painter = painterResource(R.drawable.baseline_delete_24), contentDescription = "Delete")
                     }
                     IconButton(onClick = {}) {
