@@ -229,29 +229,48 @@ fun HomeScreen() {
                         )
                     }
                     val showEditConfirmationDialog = remember { mutableStateOf(false) }
+                    val editedMonthName = remember { mutableStateOf(monthEntity.month) }
+                    val editedYear = remember { mutableStateOf(monthEntity.year.toString())}
                     if(showEditConfirmationDialog.value)
                     {
-                        val editedMonthName = remember { mutableStateOf(monthEntity.month) }
-                        val editedYear = remember { mutableStateOf(monthEntity.year.toString()) }
                         AlertDialog(onDismissRequest = { showEditConfirmationDialog.value=false },
                             title = { Text("Oh, you're editing me?") },
                             text={
                                  Column(){
-                                     TextField(value =editedMonthName.value ,
-                                         onValueChange ={editedMonthName.value=it},
-                                         label={Text("Month Name")})
+                                     Box {
+                                         TextButton(onClick = { expanded.value = true }) {
+                                             Text(text =  "Choose the new month")
+                                         }
+                                         DropdownMenu(
+                                             expanded = expanded.value,
+                                             onDismissRequest = { expanded.value = false }
+                                         ){
+                                             monthMap.keys.forEach { month ->
+                                                 DropdownMenuItem(
+                                                     text = { Text(text = month) },
+                                                     onClick = {
+                                                         editedMonthName.value = month
+                                                         expanded.value = false
+                                                     }
+                                                 )
+                                             }
+                                         }
+                                     }
                                      TextField(value =editedYear.value ,
                                          onValueChange ={editedYear.value=it},
-                                         label={Text("Month Name")},
+                                         label={Text("Input new year")},
                                          keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number))
                                  }
                             },
                             confirmButton = {Button(
                                 onClick = {
                                         val y=editedYear.value.toInt()
-                                        homeViewModel.editMonth(month = editedMonthName.value,year=y,monthEntity )
-//                                        editedMonthName.value = ""
-//                                        inputYear.value= ""
+                                    monthMap[editedMonthName.value]?.let {
+                                        homeViewModel.editMonth(month = editedMonthName.value,year=y,
+                                            moNo = it,monthEntity )
+                                    }
+                                       editedMonthName.value = ""
+                                     editedYear.value= ""
                                         showEditConfirmationDialog.value = false
                                 }
                             ) {

@@ -10,7 +10,7 @@ import com.example.walletwarden.database.MonthRepository
 import kotlinx.coroutines.launch
 
 class HomeViewModel(private val repository: MonthRepository): ViewModel() {
-    val allMonths: LiveData<List<MonthEntity>> = repository.allMonths.asLiveData()
+    var allMonths: LiveData<List<MonthEntity>> = repository.allMonths.asLiveData()
 
     fun addNewMonth(month: String,year:Int,moNo:Int) {
         viewModelScope.launch {
@@ -25,9 +25,9 @@ class HomeViewModel(private val repository: MonthRepository): ViewModel() {
         }
     }
 
-    fun editMonth(month: String,year:Int,monthEntity: MonthEntity){
+    fun editMonth(month: String,year:Int,moNo:Int,monthEntity: MonthEntity){
         viewModelScope.launch {
-            repository.update(month,year,monthEntity)
+            repository.update(month,year,moNo,monthEntity)
         }
     }
 
