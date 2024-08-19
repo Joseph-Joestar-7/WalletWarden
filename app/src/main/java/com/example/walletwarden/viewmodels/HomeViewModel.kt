@@ -25,6 +25,12 @@ class HomeViewModel(private val repository: MonthRepository): ViewModel() {
         }
     }
 
+    fun editMonth(month: String,year:Int,monthEntity: MonthEntity){
+        viewModelScope.launch {
+            repository.update(month,year,monthEntity)
+        }
+    }
+
     class HomeViewModelFactory(private val repository: MonthRepository) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {

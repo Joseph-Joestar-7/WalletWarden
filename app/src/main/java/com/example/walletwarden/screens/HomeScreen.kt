@@ -34,6 +34,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -195,8 +196,48 @@ fun HomeScreen() {
                             }
                         )
                     }
+                    val showEditConfirmationDialog = remember { mutableStateOf(false) }
+                    if(showEditConfirmationDialog.value)
+                    {
+                        val editedMonthName = remember { mutableStateOf(monthEntity.month) }
+                        val editedYear = remember { mutableStateOf(monthEntity.year.toString()) }
+                        AlertDialog(onDismissRequest = { showEditConfirmationDialog.value=false },
+                            title = { Text("Oh, you're editing me?") },
+                            text={
+                                 Column(){
+                                     TextField(value =editedMonthName.value ,
+                                         onValueChange ={editedMonthName.value=it},
+                                         label={Text("Month Name")})
+                                     TextField(value =editedYear.value ,
+                                         onValueChange ={editedYear.value=it},
+                                         label={Text("Month Name")},
+                                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number))
+                                 }
+                            },
+                            confirmButton = {Button(
+                                onClick = {
+                                        val y=editedYear.value.toInt()
+                                        homeViewModel.editMonth(month = editedMonthName.value,year=y,monthEntity )
+//                                        editedMonthName.value = ""
+//                                        inputYear.value= ""
+                                        showEditConfirmationDialog.value = false
+                                }
+                            ) {
+                                Text("Confirm edit")
+                            }
+                            },
+                            dismissButton = {
+                                Button(
+                                    onClick = { showEditConfirmationDialog.value = false }
+                                ) {
+                                    Text("Nah, forget editing")
+                                }
+                            })
+                    }
+
                     MonthItem(monthEntity = monthEntity,
-                        onDelete = {showDeleteConfirmationDialog.value=true})
+                        onDelete = {showDeleteConfirmationDialog.value=true},
+                        onEdit = {showEditConfirmationDialog.value=true})
                 }
             }
             FloatingActionButton(modifier= Modifier
@@ -216,7 +257,8 @@ fun HomeScreen() {
 
 @Composable
 fun MonthItem(monthEntity: MonthEntity,
-              onDelete:()->Unit) {
+              onDelete:()->Unit,
+              onEdit:()->Unit) {
     Column(modifier = Modifier
         .fillMaxWidth()
         .padding(horizontal = 8.dp)
@@ -245,7 +287,7 @@ fun MonthItem(monthEntity: MonthEntity,
                     IconButton(onClick = onDelete) {
                         Icon(painter = painterResource(R.drawable.baseline_delete_24), contentDescription = "Delete")
                     }
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = onEdit) {
                         Icon(painter = painterResource(R.drawable.baseline_create_24), contentDescription = "Edit")
                     }
                     IconButton(onClick = {}) {

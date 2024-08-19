@@ -9,8 +9,8 @@ class MonthRepository(private val monthDao: MonthDao) {
         monthDao.insert(month)
     }
 
-    suspend fun update(month: MonthEntity) {
-        monthDao.update(month)
+    suspend fun update(monthName: String,year:Int,month: MonthEntity) {
+        monthDao.update(month.id,monthName,year)
     }
 
     suspend fun delete(month: MonthEntity) {

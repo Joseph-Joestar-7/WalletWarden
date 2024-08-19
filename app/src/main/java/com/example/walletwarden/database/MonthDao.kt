@@ -12,8 +12,8 @@ interface MonthDao{
     @Insert
     suspend fun insert(month:MonthEntity)
 
-    @Update
-    suspend fun update(month: MonthEntity)
+    @Query("UPDATE MonthEntity SET month = :monthName, year = :year WHERE id = :id")
+    suspend fun update(id:Int,monthName: String,year:Int)
 
     @Delete
     suspend fun delete(month: MonthEntity)
