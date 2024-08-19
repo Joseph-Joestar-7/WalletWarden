@@ -9,5 +9,6 @@ data class MonthEntity(
     val id:Int=0,
     var month:String,
     var year :Int,
-    var monthlyexp:Int
+    var monthlyexp:Int,
+    var monthNo: Int
 )

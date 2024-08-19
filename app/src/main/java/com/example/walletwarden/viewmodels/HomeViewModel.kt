@@ -12,9 +12,9 @@ import kotlinx.coroutines.launch
 class HomeViewModel(private val repository: MonthRepository): ViewModel() {
     val allMonths: LiveData<List<MonthEntity>> = repository.allMonths.asLiveData()
 
-    fun addNewMonth(month: String,year:Int) {
+    fun addNewMonth(month: String,year:Int,moNo:Int) {
         viewModelScope.launch {
-            val newMonth = MonthEntity(month = month,year=year, monthlyexp = 0)
+            val newMonth = MonthEntity(month = month,year=year, monthNo = moNo,monthlyexp = 0)
             repository.insert(newMonth)
         }
     }

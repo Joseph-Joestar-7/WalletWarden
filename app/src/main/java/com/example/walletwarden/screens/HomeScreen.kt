@@ -6,6 +6,7 @@ import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,6 +26,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -40,6 +43,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -87,9 +91,17 @@ fun HomeScreen() {
     val isAdding= remember {
         mutableStateOf(false)
     }
-    val inputMonth= remember {
-        mutableStateOf("")
-    }
+//    val inputMonth= remember {
+//        mutableStateOf("")
+//    }
+    val expanded = remember { mutableStateOf(false) }
+    val selectedMonth = remember { mutableStateOf("") }
+    val selectedMonthNo = remember { mutableIntStateOf(0) }
+    val monthMap = mapOf(
+        "January" to 1, "February" to 2, "March" to 3, "April" to 4,
+        "May" to 5, "June" to 6, "July" to 7, "August" to 8,
+        "September" to 9, "October" to 10, "November" to 11, "December" to 12
+    )
     val inputYear= remember {
         mutableStateOf("")
     }
@@ -119,12 +131,32 @@ fun HomeScreen() {
                     title = { Text(text = "Add New Month") },
                     text = {
                         Column {
-                            OutlinedTextField(
-                                value = inputMonth.value,
-                                onValueChange = { inputMonth.value = it },
-                                label = { Text("Month Name") },
-                                modifier = Modifier.fillMaxWidth()
-                            )
+//                            OutlinedTextField(
+//                                value = inputMonth.value,
+//                                onValueChange = { inputMonth.value = it },
+//                                label = { Text("Month Name") },
+//                                modifier = Modifier.fillMaxWidth()
+//                            )
+                            Box {
+                                TextButton(onClick = { expanded.value = true }) {
+                                    Text(text = selectedMonth.value.ifEmpty { "Choose Month" })
+                                }
+                                DropdownMenu(
+                                    expanded = expanded.value,
+                                    onDismissRequest = { expanded.value = false }
+                                ){
+                                    monthMap.keys.forEach { month ->
+                                        DropdownMenuItem(
+                                            text = { Text(text = month) },
+                                            onClick = {
+                                                selectedMonth.value = month
+                                                selectedMonthNo.value= monthMap[month]!!
+                                                expanded.value = false
+                                            }
+                                        )
+                                    }
+                                }
+                            }
                             Spacer(modifier = Modifier.height(8.dp))
                             OutlinedTextField(
                                 value = inputYear.value,
@@ -139,10 +171,10 @@ fun HomeScreen() {
                     },
                     confirmButton = {Button(
                         onClick = {
-                            if (inputMonth.value!="" && inputYear.value!= "") {
+                            if (selectedMonth.value!="" && inputYear.value!= "") {
                                 val y=inputYear.value.toInt()
-                                homeViewModel.addNewMonth(month = inputMonth.value,year=y )
-                                inputMonth.value = ""
+                                homeViewModel.addNewMonth(month = selectedMonth.value,year=y, moNo = selectedMonthNo.value )
+                                selectedMonth.value = ""
                                 inputYear.value= ""
                                 isAdding.value = false
                             } else {

@@ -18,6 +18,6 @@ interface MonthDao{
     @Delete
     suspend fun delete(month: MonthEntity)
 
-    @Query("SELECT * FROM MonthEntity ORDER BY id ASC")
+    @Query("SELECT * FROM MonthEntity ORDER BY year ASC, monthNo ASC")
     fun getAllMonths(): Flow<List<MonthEntity>>
 }
