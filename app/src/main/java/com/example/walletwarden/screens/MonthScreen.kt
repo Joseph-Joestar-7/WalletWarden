@@ -12,5 +12,5 @@ fun MonthExpenseScreen(monthId: Int) {
     val viewModel: MonthScreenViewModel = viewModel(
         factory = MonthScreenViewModel.MonthScreenViewModelFactory(context, monthId)
     )
-    
+
 }
