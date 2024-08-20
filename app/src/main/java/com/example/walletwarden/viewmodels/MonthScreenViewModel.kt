@@ -9,10 +9,9 @@ import com.example.walletwarden.database.ExpenseRepository
 
 class MonthScreenViewModel(private val repository: ExpenseRepository, private val monthId: Int):ViewModel() {
 
-    val expenses = repository.getExpensesForMonth(monthId).asLiveData()
-    val totalExpense = repository.getTotalExpenseForMonth(monthId).asLiveData()
-
     
+
+
 
 
 
