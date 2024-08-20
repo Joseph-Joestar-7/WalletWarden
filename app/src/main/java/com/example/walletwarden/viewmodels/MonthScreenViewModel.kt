@@ -23,7 +23,11 @@ class MonthScreenViewModel(private val repository: ExpenseRepository, private va
         }
     }
 
-
+    fun deleteExpense(expenseId: Int) {
+        viewModelScope.launch {
+            repository.delete(expenseId)
+        }
+    }
 
 
 
