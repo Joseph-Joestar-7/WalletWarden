@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.walletwarden.database.ExpenseDatabase
 import com.example.walletwarden.database.ExpenseEntity
 import com.example.walletwarden.database.ExpenseRepository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import java.util.Date
 
@@ -15,7 +16,12 @@ class MonthScreenViewModel(private val repository: ExpenseRepository, private va
 
     val expenses = repository.getExpensesForMonth(monthId).asLiveData()
     val totalExpense = repository.getTotalExpenseForMonth(monthId).asLiveData()
-
+fun getMonthName():String{
+    return repository.getMonthName(monthId).toString()
+}
+    fun getYear(): Flow<Int> {
+        return repository.getYear(monthId)
+    }
     fun addExpense(name: String, date: Date, amount: Int, category: String) {
         viewModelScope.launch {
             val newExpense = ExpenseEntity(monthId = monthId, name = name, date = date, amount = amount, category = category)

@@ -21,6 +21,7 @@ import androidx.navigation.NavHostController
 import com.example.walletwarden.R
 import com.example.walletwarden.database.ExpenseRepository
 import com.example.walletwarden.ui.theme.inversePrimaryDark
+import com.example.walletwarden.ui.theme.tertiaryLight
 import com.example.walletwarden.viewmodels.MonthScreenViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,10 +38,11 @@ fun MonthScreen(navController: NavHostController, monthId: Int) {
             val(topBar,balanceRow,cards,add)=createRefs()
             CenterAlignedTopAppBar(title = {
                 Row {
-                    Text(text = )
+                    Text(text = viewModel.getMonthName())
+                    Text(text = "${viewModel.getYear()}")
                 } },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor =
+                    containerColor = tertiaryLight
                 ), modifier = Modifier.constrainAs(topBar){
                     top.linkTo(parent.top)
                     start.linkTo(parent.start)
