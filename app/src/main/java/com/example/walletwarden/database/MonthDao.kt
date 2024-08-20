@@ -12,12 +12,12 @@ interface MonthDao{
     @Insert
     suspend fun insert(month:MonthEntity)
 
-    @Query("UPDATE MonthEntity SET month = :monthName, year = :year,monthNo= :moNo WHERE id = :id")
+    @Query("UPDATE months SET month = :monthName, year = :year,monthNo= :moNo WHERE id = :id")
     suspend fun update(id:Int,monthName: String,year:Int,moNo:Int)
 
     @Delete
     suspend fun delete(month: MonthEntity)
 
-    @Query("SELECT * FROM MonthEntity ORDER BY year ASC, monthNo ASC")
+    @Query("SELECT * FROM months ORDER BY year ASC, monthNo ASC")
     fun getAllMonths(): Flow<List<MonthEntity>>
 }
