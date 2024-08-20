@@ -377,10 +377,6 @@ fun BalanceRow(modifier: Modifier = Modifier) {
     }
 }
 
-
-
-
-
 @Preview
 @Composable
 fun HomeScreenPreview(modifier: Modifier = Modifier) {
