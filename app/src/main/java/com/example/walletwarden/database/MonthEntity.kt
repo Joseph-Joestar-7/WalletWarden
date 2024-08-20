@@ -3,7 +3,7 @@ package com.example.walletwarden.database
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity(tableName = "months")
 data class MonthEntity(
     @PrimaryKey(autoGenerate = true)
     val id:Int=0,

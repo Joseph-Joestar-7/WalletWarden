@@ -16,6 +16,14 @@ class ExpenseRepository(private val expenseDao: ExpenseDao) {
         expenseDao.insert(expense)
     }
 
+    fun getMonthName(monthId: Int): Flow<String> {
+        return expenseDao.getMonthName(monthId)
+    }
+
+    fun getYear(monthId: Int): Flow<Int> {
+        return expenseDao.getYear(monthId)
+    }
+
 //    suspend fun update(expense: ExpenseEntity) {
 //        expenseDao.update(expense)
 //    }
