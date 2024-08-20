@@ -7,7 +7,7 @@ import com.example.walletwarden.database.ExpenseRepository
 import com.example.walletwarden.viewmodels.MonthScreenViewModel
 
 @Composable
-fun MonthExpenseScreen(monthId: Int) {
+fun MonthScreen(monthId: Int) {
     val context = LocalContext.current
     val viewModel: MonthScreenViewModel = viewModel(
         factory = MonthScreenViewModel.MonthScreenViewModelFactory(context, monthId)

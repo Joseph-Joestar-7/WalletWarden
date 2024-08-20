@@ -41,6 +41,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
@@ -59,6 +60,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.walletwarden.R
 import com.example.walletwarden.database.MonthDatabase
 import com.example.walletwarden.database.MonthEntity
@@ -75,7 +78,7 @@ import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavController) {
     val homeViewModel: HomeViewModel = viewModel(
         factory = HomeViewModel.HomeViewModelFactory(
             repository = MonthRepository(
@@ -90,6 +93,13 @@ fun HomeScreen() {
     val allMonths by homeViewModel.allMonths.observeAsState(emptyList())
     val isAdding= remember {
         mutableStateOf(false)
+    }
+    val balance by derivedStateOf {
+        var totalBalance = 0
+        allMonths.forEach { month ->
+            totalBalance += month.monthlyexp
+        }
+        totalBalance
     }
 //    val inputMonth= remember {
 //        mutableStateOf("")
@@ -119,7 +129,7 @@ fun HomeScreen() {
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 })
-            BalanceRow(modifier=Modifier.constrainAs(balanceRow){
+            BalanceRow(balance=balance,modifier=Modifier.constrainAs(balanceRow){
                 top.linkTo(topBar.bottom)
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
@@ -288,7 +298,10 @@ fun HomeScreen() {
 
                     MonthItem(monthEntity = monthEntity,
                         onDelete = {showDeleteConfirmationDialog.value=true},
-                        onEdit = {showEditConfirmationDialog.value=true})
+                        onEdit = {showEditConfirmationDialog.value=true},
+                        onForward = {
+                            navController.navigate(Screen.MonthExpense.createRoute(monthEntity.id))
+                        })
                 }
             }
             FloatingActionButton(modifier= Modifier
@@ -309,7 +322,8 @@ fun HomeScreen() {
 @Composable
 fun MonthItem(monthEntity: MonthEntity,
               onDelete:()->Unit,
-              onEdit:()->Unit) {
+              onEdit:()->Unit,
+              onForward:()->Unit) {
     Column(modifier = Modifier
         .fillMaxWidth()
         .padding(horizontal = 8.dp)
@@ -341,7 +355,7 @@ fun MonthItem(monthEntity: MonthEntity,
                     IconButton(onClick = onEdit) {
                         Icon(painter = painterResource(R.drawable.baseline_create_24), contentDescription = "Edit")
                     }
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = onForward) {
                         Icon(painter = painterResource(R.drawable.baseline_arrow_forward_ios_24), contentDescription = "Forward")
                     }
                 }
@@ -353,11 +367,8 @@ fun MonthItem(monthEntity: MonthEntity,
 }
 
 @Composable
-fun BalanceRow(modifier: Modifier = Modifier) {
+fun BalanceRow(modifier: Modifier = Modifier,balance:Int) {
 
-    val balance= remember {
-        mutableStateOf("0")
-    }
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -372,7 +383,7 @@ fun BalanceRow(modifier: Modifier = Modifier) {
                 .fillMaxSize()
         ) {
                 Text(text= stringResource(R.string.Current_Balance))
-                Text(text = balance.value)
+                Text(text = balance.toString())
         }
     }
 }
@@ -381,6 +392,6 @@ fun BalanceRow(modifier: Modifier = Modifier) {
 @Composable
 fun HomeScreenPreview(modifier: Modifier = Modifier) {
     WalletWardenTheme {
-        HomeScreen()
+        HomeScreen(rememberNavController())
     }
 }
