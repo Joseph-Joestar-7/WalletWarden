@@ -78,16 +78,16 @@ import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController) {
-    val homeViewModel: HomeViewModel = viewModel(
-        factory = HomeViewModel.HomeViewModelFactory(
-            repository = MonthRepository(
-                MonthDatabase.getDatabase(
-                    LocalContext.current
-                ).monthDao()
-            )
-        )
-    )
+fun HomeScreen(navController: NavController,homeViewModel: HomeViewModel) {
+//    val homeViewModel: HomeViewModel = viewModel(
+//        factory = HomeViewModel.HomeViewModelFactory(
+//            repository = MonthRepository(
+//                MonthDatabase.getDatabase(
+//                    LocalContext.current
+//                ).monthDao()
+//            )
+//        )
+//    )
     val context = LocalContext.current
 
     val allMonths by homeViewModel.allMonths.observeAsState(emptyList())
@@ -388,10 +388,10 @@ fun BalanceRow(modifier: Modifier = Modifier,balance:Int) {
     }
 }
 
-@Preview
-@Composable
-fun HomeScreenPreview(modifier: Modifier = Modifier) {
-    WalletWardenTheme {
-        HomeScreen(rememberNavController())
-    }
-}
+//@Preview
+//@Composable
+//fun HomeScreenPreview(modifier: Modifier = Modifier) {
+//    WalletWardenTheme {
+//        HomeScreen(rememberNavController())
+//    }
+//}

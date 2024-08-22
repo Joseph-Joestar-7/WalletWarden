@@ -31,6 +31,15 @@ class HomeViewModel(private val repository: MonthRepository): ViewModel() {
         }
     }
 
+    suspend fun getMonthName(id:Int):String
+    {
+        return repository.getMonthNameById(id)
+    }
+    suspend fun getYear(id:Int):Int
+    {
+        return repository.getYearById(id)
+    }
+
     class HomeViewModelFactory(private val repository: MonthRepository) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {

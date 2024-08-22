@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.walletwarden.Converters
 
-@Database(entities = [ExpenseEntity::class,MonthEntity::class], version = 2, exportSchema = false)
+@Database(entities = [ExpenseEntity::class,MonthEntity::class], version = 4, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class ExpenseDatabase : RoomDatabase() {
     abstract fun expenseDao(): ExpenseDao

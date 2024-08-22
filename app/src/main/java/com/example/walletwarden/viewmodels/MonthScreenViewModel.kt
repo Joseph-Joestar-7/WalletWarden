@@ -8,22 +8,36 @@ import androidx.lifecycle.viewModelScope
 import com.example.walletwarden.database.ExpenseDatabase
 import com.example.walletwarden.database.ExpenseEntity
 import com.example.walletwarden.database.ExpenseRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Date
 
 class MonthScreenViewModel(private val repository: ExpenseRepository, private val monthId: Int):ViewModel() {
 
-    val expenses = repository.getExpensesForMonth(monthId).asLiveData()
-    val totalExpense = repository.getTotalExpenseForMonth(monthId).asLiveData()
-fun getMonthName():String{
-    return repository.getMonthName(monthId).toString()
-}
-    fun getYear(): Flow<Int> {
-        return repository.getYear(monthId)
+    val expenses = repository.getExpensesForMonth(monthId)
+        .asLiveData(viewModelScope.coroutineContext + Dispatchers.IO)
+    val totalExpense = repository.getTotalExpenseForMonth(monthId)
+        .asLiveData(viewModelScope.coroutineContext + Dispatchers.IO)
+
+
+    suspend fun getMonthName():String{
+        val monthName = repository.getMonthName(monthId)
+        println("Fetched Month Name: $monthName for monthId: $monthId")
+        return monthName ?: "Unknown Month"
     }
+
+    suspend fun getYear():Int{
+        val year = repository.getYear(monthId)
+        println("Fetched Year: $year for monthId: $monthId")
+        return year ?: 0
+    }
+
     fun addExpense(name: String, date: Date, amount: Int, category: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val newExpense = ExpenseEntity(monthId = monthId, name = name, date = date, amount = amount, category = category)
             repository.insert(newExpense)
         }
@@ -34,8 +48,6 @@ fun getMonthName():String{
             repository.delete(expenseId)
         }
     }
-
-
 
     class MonthScreenViewModelFactory(private val context: Context, private val monthId: Int) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {

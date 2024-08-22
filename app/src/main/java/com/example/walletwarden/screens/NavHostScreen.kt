@@ -1,13 +1,12 @@
 package com.example.walletwarden.screens
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.walletwarden.viewmodels.HomeViewModel
 
 sealed class Screen(val route: String) {
     object Home : Screen("home")
@@ -17,20 +16,20 @@ sealed class Screen(val route: String) {
 }
 
 @Composable
-fun NavHostScreen(navController: NavHostController) {
+fun NavHostScreen(navController: NavHostController,homeViewModel: HomeViewModel) {
     NavHost(
         navController = navController,
         startDestination = Screen.Home.route
     ){
         composable(Screen.Home.route) {
-            HomeScreen(navController)
+            HomeScreen(navController,homeViewModel)
         }
         composable(
             route = Screen.MonthExpense.route,
             arguments = listOf(navArgument("monthId") { type = NavType.IntType })
         ) { backStackEntry ->
             val monthId = backStackEntry.arguments?.getInt("monthId")
-            monthId?.let { MonthScreen(navController, it) }
+            monthId?.let { MonthScreen(navController, it,homeViewModel) }
         }
     }
 }

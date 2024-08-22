@@ -1,5 +1,7 @@
 package com.example.walletwarden.database
 
+import android.util.Log
+import androidx.lifecycle.LiveData
 import kotlinx.coroutines.flow.Flow
 
 class ExpenseRepository(private val expenseDao: ExpenseDao) {
@@ -16,12 +18,16 @@ class ExpenseRepository(private val expenseDao: ExpenseDao) {
         expenseDao.insert(expense)
     }
 
-    fun getMonthName(monthId: Int): Flow<String> {
-        return expenseDao.getMonthName(monthId)
+    suspend fun getMonthName(monthId: Int): String {
+        val monthName = expenseDao.getMonthName(monthId)
+            Log.d("Repository", "Month name fetched: $monthName")
+        return monthName
     }
 
-    fun getYear(monthId: Int): Flow<Int> {
-        return expenseDao.getYear(monthId)
+    suspend fun getYear(monthId: Int): Int {
+        val year = expenseDao.getYear(monthId)
+        Log.d("Repository", "Year name fetched: $year")
+        return year
     }
 
 //    suspend fun update(expense: ExpenseEntity) {

@@ -1,5 +1,6 @@
 package com.example.walletwarden.database
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -21,8 +22,8 @@ interface ExpenseDao {
     fun getTotalExpenseForMonth(monthId: Int): Flow<Int>
 
     @Query("SELECT month FROM months WHERE id = :monthId")
-    fun getMonthName(monthId: Int): Flow<String>
+    suspend fun getMonthName(monthId: Int): String
 
     @Query("SELECT year FROM months WHERE id = :monthId")
-    fun getYear(monthId: Int): Flow<Int>
+    suspend fun getYear(monthId: Int): Int
 }

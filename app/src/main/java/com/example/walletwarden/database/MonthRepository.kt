@@ -16,4 +16,12 @@ class MonthRepository(private val monthDao: MonthDao) {
     suspend fun delete(month: MonthEntity) {
         monthDao.delete(month)
     }
+
+    suspend fun getMonthNameById(id: Int): String {
+        return monthDao.getMonthNameById(id)
+    }
+
+    suspend fun getYearById(id: Int): Int {
+        return monthDao.getYearById(id)
+    }
 }

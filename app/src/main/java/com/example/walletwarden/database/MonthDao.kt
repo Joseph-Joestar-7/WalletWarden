@@ -20,4 +20,10 @@ interface MonthDao{
 
     @Query("SELECT * FROM months ORDER BY year ASC, monthNo ASC")
     fun getAllMonths(): Flow<List<MonthEntity>>
+
+    @Query("SELECT month FROM months WHERE id = :id")
+    suspend fun getMonthNameById(id: Int): String
+
+    @Query("SELECT year FROM months WHERE id = :id")
+    suspend fun getYearById(id: Int): Int
 }
