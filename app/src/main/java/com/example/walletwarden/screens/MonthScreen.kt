@@ -2,7 +2,9 @@ package com.example.walletwarden.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,38 +13,55 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
+import com.example.expensetracker.Dates
+import com.example.walletwarden.R
 import com.example.walletwarden.database.ExpenseEntity
-import com.example.walletwarden.ui.theme.WalletWardenTheme
 import com.example.walletwarden.ui.theme.tertiaryLight
 import com.example.walletwarden.viewmodels.HomeViewModel
 import com.example.walletwarden.viewmodels.MonthScreenViewModel
-import kotlin.math.exp
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,24 +72,33 @@ fun MonthScreen(navController: NavHostController, monthId: Int, homeViewModel: H
     )
     val allExpenses by viewModel.expenses.observeAsState()
     val monthlyBalance:Int=0
+
+    val expenseMap= mapOf(
+        "Food" to R.drawable.icon_food,
+        "Transport" to R.drawable.icon_transport,
+        "Housing" to R.drawable.icon_housing,
+        "Entertainment" to R.drawable.icon_entertainment,
+        "Personal Care" to R.drawable.icon_personalcare,
+        "Health Care" to R.drawable.icon_healthcare,
+        "Travel" to R.drawable.icon_travel,
+        "Banking" to R.drawable.icon_bank,
+        "Groceries" to R.drawable.icon_groceries,
+        "Shopping" to R.drawable.icon_shopping,
+    )
+
     Surface(modifier=Modifier.fillMaxSize())
     {
         ConstraintLayout {
             val(topBar,balanceRow,cards,add)=createRefs()
-//            var monthName by remember { mutableStateOf<String?>(null) }
-//            var year by remember { mutableStateOf<Int?>(null) }
-//
-//            // Load monthName and year using LaunchedEffect
-//            LaunchedEffect(monthId) {
-//                monthName = viewModel.getMonthName().also {
-//                    println("Month name fetched: $it")
-//                }
-//                year = viewModel.getYear().also {
-//                    println("Year fetched: $it")
-//                }
-//            }
+
             var monthName by remember { mutableStateOf<String?>(null) }
             var year by remember { mutableStateOf<Int?>(null) }
+
+            val sheetState = rememberModalBottomSheetState()
+            val scope = rememberCoroutineScope()
+            var showBottomSheet by remember { mutableStateOf(false) }
+            var isAddingExpense by remember{ mutableStateOf(false) }
+            var isAddingIncome by remember{ mutableStateOf(false) }
 
             LaunchedEffect(monthId) {
                 monthName = homeViewModel.getMonthName(monthId)
@@ -108,11 +136,133 @@ fun MonthScreen(navController: NavHostController, monthId: Int, homeViewModel: H
                         onDelete = { viewModel.deleteExpense(ExpenseEntity.id) },
                         onEdit = {})
                 }
-                
-
-
             }
+            if (showBottomSheet){
+                ModalBottomSheet(
+                    onDismissRequest = {
+                        showBottomSheet = false
+                    },
+                    sheetState = sheetState
+                ){
+                    Column {
+                        TextButton(onClick = { isAddingExpense = true
+                            scope.launch { sheetState.hide() } }) {
+                            Text(text = "Add Expense")
+                        }
+                        TextButton(onClick = { isAddingIncome = true
+                            scope.launch { sheetState.hide() } }) {
+                            Text(text = "Add Income")
+                        }
+                    }
+                }
+            }
+            if(isAddingIncome || isAddingExpense)
+            {
+                val expanded = remember { mutableStateOf(false) }
+                var itemName:String=""
+                var incometype:String=""
+                var amt:String=""
+                val date= remember { mutableStateOf(0L) }
+                val dateDialogVisibility= remember{ mutableStateOf(false) }
+                AlertDialog(onDismissRequest = { isAddingIncome=false
+                                               isAddingIncome=false},
+                    title = {
+                        Text(text = if(isAddingIncome) "Ayo Congo you got an income?"
+                        else "Blud can't stop spending")
+                    },
+                    text = {
+                        Column {
+                            OutlinedTextField(
+                                value =itemName ,
+                                onValueChange = {itemName=it},
+                                label = { Text("ADD ITEM NAME") },
+                                keyboardOptions = KeyboardOptions.Default.copy(
+                                    keyboardType = KeyboardType.Number
+                                ),
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            if(isAddingIncome)
+                            {
+                                Box {
+                                    TextButton(onClick = { expanded.value = true }) {
+                                        Text(text =  "Choose the type of Expense")
+                                    }
+                                    DropdownMenu(expanded = expanded.value,
+                                        onDismissRequest = {expanded.value = false}) {
+                                        expenseMap.keys.forEach {expense->
+                                            DropdownMenuItem(
+                                                text = { Text(text =expense) },
+                                                onClick = {
+                                                    incometype= expense
+                                                    expanded.value = false
+                                                }
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                            OutlinedTextField(
+                                value =amt ,
+                                onValueChange = {amt=it},
+                                label = { Text("ADD AMOUNT") },
+                                keyboardOptions = KeyboardOptions.Default.copy(
+                                    keyboardType = KeyboardType.Number
+                                ),
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            OutlinedTextField(value =if(date.value ==0L)"" else Dates.formatDateToHumanReadableForm(date.value),
+                                onValueChange ={}, modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable { dateDialogVisibility.value = true },enabled = false,
+                                colors= OutlinedTextFieldDefaults.colors(
+                                    disabledBorderColor = Color.Black,
+                                    disabledTextColor = Color.Black
+                                ))
+                            if (dateDialogVisibility.value)
+                                ExpenseDatePickerDialog(onDateSelected ={date.value=it
+                                    dateDialogVisibility.value=false} ,
+                                    onDismiss = {dateDialogVisibility.value=false})
+
+                        }
+
+
+                    },
+
+                    confirmButton = { /*TODO*/ })
+            }
+            FloatingActionButton(modifier= Modifier
+                .padding(8.dp)
+                .constrainAs(add) {
+                    top.linkTo(cards.bottom)
+                    end.linkTo(parent.end)
+                },onClick = {showBottomSheet = true}) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Add"
+                )
+            }
+
        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ExpenseDatePickerDialog(onDateSelected:(date:Long)->Unit,
+                            onDismiss:()->Unit)
+{
+    val datePickerState= rememberDatePickerState()
+    val selectedDate= datePickerState.selectedDateMillis?:0
+    DatePickerDialog(onDismissRequest = { onDismiss() },
+        confirmButton = { TextButton(onClick = { onDateSelected(selectedDate)}) {
+            Text(text="Confirm")
+        }
+        }, dismissButton ={ TextButton(onClick = { onDateSelected(selectedDate)}) {
+            Text(text="Cancel")
+        }
+        } ) {
+        DatePicker(state = datePickerState)
+
     }
 }
 
@@ -140,7 +290,9 @@ fun ExpenseItem(expenseEntity: ExpenseEntity,
                     .fillMaxSize()){
                 Image(painter = , contentDescription = )
                 Column {
-                    Text(text= expenseEntity.name)
+                    Text(text= expenseEntity.name,
+                        color = if(expenseEntity.isExpense) Color.Red
+                    else Color.Green)
                     Text(text = expenseEntity.amount.toString())
                 }
                 Column {
@@ -151,7 +303,6 @@ fun ExpenseItem(expenseEntity: ExpenseEntity,
                         Icon(painter = , contentDescription = )
                     }
                 }
-
             }
         }
     }

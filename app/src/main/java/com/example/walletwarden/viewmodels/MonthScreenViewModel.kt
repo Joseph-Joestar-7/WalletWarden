@@ -38,9 +38,11 @@ class MonthScreenViewModel(private val repository: ExpenseRepository, private va
         return year ?: 0
     }
 
-    fun addExpense(name: String, date: Date, amount: Int, category: String) {
+    fun addExpense(name: String, date: Date, amount: Int,
+                   icon:Int,isExpense:Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
-            val newExpense = ExpenseEntity(monthId = monthId, name = name, date = date, amount = amount, category = category)
+            val newExpense = ExpenseEntity(monthId = monthId, name = name, date = date,
+                amount = amount,icon=icon, isExpense = isExpense)
             repository.insert(newExpense)
         }
     }
