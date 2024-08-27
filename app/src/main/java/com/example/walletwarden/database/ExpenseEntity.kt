@@ -15,6 +15,5 @@ data class ExpenseEntity(
     val name: String,
     val date: Date,
     val amount: Int,
-    val category: String,
-
+    val isExpense: Boolean,
 )
