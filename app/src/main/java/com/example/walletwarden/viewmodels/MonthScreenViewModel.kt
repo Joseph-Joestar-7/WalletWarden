@@ -1,6 +1,7 @@
 package com.example.walletwarden.viewmodels
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
@@ -8,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.walletwarden.database.ExpenseDatabase
 import com.example.walletwarden.database.ExpenseEntity
 import com.example.walletwarden.database.ExpenseRepository
+import com.example.walletwarden.database.MonthEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -18,7 +20,7 @@ import java.util.Date
 
 class MonthScreenViewModel(private val repository: ExpenseRepository, private val monthId: Int):ViewModel() {
 
-    val expenses = repository.getExpensesForMonth(monthId)
+    val expenses: LiveData<List<ExpenseEntity>> = repository.getExpensesForMonth(monthId)
         .asLiveData(viewModelScope.coroutineContext + Dispatchers.IO)
     val totalExpense = repository.getTotalExpenseForMonth(monthId)
         .asLiveData(viewModelScope.coroutineContext + Dispatchers.IO)

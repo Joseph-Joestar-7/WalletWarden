@@ -20,7 +20,6 @@ class ExpenseRepository(private val expenseDao: ExpenseDao) {
 
     suspend fun getMonthName(monthId: Int): String {
         val monthName = expenseDao.getMonthName(monthId)
-            Log.d("Repository", "Month name fetched: $monthName")
         return monthName
     }
 

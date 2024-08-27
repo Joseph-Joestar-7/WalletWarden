@@ -2,6 +2,8 @@ package com.example.walletwarden.screens
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
@@ -10,14 +12,20 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.walletwarden.database.ExpenseEntity
+import com.example.walletwarden.ui.theme.WalletWardenTheme
 import com.example.walletwarden.ui.theme.tertiaryLight
 import com.example.walletwarden.viewmodels.HomeViewModel
 import com.example.walletwarden.viewmodels.MonthScreenViewModel
@@ -29,7 +37,8 @@ fun MonthScreen(navController: NavHostController, monthId: Int, homeViewModel: H
     val viewModel: MonthScreenViewModel = viewModel(
         factory = MonthScreenViewModel.MonthScreenViewModelFactory(context, monthId)
     )
-
+    val allExpenses by viewModel.expenses.observeAsState()
+    val monthlyBalance:Int=0
     Surface(modifier=Modifier.fillMaxSize())
     {
         ConstraintLayout {
@@ -70,7 +79,32 @@ fun MonthScreen(navController: NavHostController, monthId: Int, homeViewModel: H
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 })
-        }
+            BalanceRow(balance = monthlyBalance, modifier = Modifier.constrainAs(balanceRow){
+                top.linkTo(topBar.bottom, margin = 10.dp)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+            })
+            LazyColumn(modifier=Modifier.constrainAs(cards){
+                top.linkTo(balanceRow.bottom)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+            }){
+                items(allExpenses){ExpenseEntity->
+
+
+                }
+
+
+            }
+       }
     }
+}
+
+@Composable
+fun ExpenseItem(expenseEntity: ExpenseEntity,
+                onDelete:()->Unit,
+                onEdit:()->Unit,
+                ) {
+
 }
 

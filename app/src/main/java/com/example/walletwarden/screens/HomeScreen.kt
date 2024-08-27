@@ -63,6 +63,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.walletwarden.R
+import com.example.walletwarden.database.MonthDao
 import com.example.walletwarden.database.MonthDatabase
 import com.example.walletwarden.database.MonthEntity
 import com.example.walletwarden.database.MonthRepository
@@ -79,17 +80,7 @@ import kotlinx.coroutines.delay
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavController,homeViewModel: HomeViewModel) {
-//    val homeViewModel: HomeViewModel = viewModel(
-//        factory = HomeViewModel.HomeViewModelFactory(
-//            repository = MonthRepository(
-//                MonthDatabase.getDatabase(
-//                    LocalContext.current
-//                ).monthDao()
-//            )
-//        )
-//    )
     val context = LocalContext.current
-
     val allMonths by homeViewModel.allMonths.observeAsState(emptyList())
     val isAdding= remember {
         mutableStateOf(false)
@@ -101,9 +92,6 @@ fun HomeScreen(navController: NavController,homeViewModel: HomeViewModel) {
         }
         totalBalance
     }
-//    val inputMonth= remember {
-//        mutableStateOf("")
-//    }
     val expanded = remember { mutableStateOf(false) }
     val selectedMonth = remember { mutableStateOf("") }
     val selectedMonthNo = remember { mutableIntStateOf(0) }
@@ -141,12 +129,6 @@ fun HomeScreen(navController: NavController,homeViewModel: HomeViewModel) {
                     title = { Text(text = "Add New Month") },
                     text = {
                         Column {
-//                            OutlinedTextField(
-//                                value = inputMonth.value,
-//                                onValueChange = { inputMonth.value = it },
-//                                label = { Text("Month Name") },
-//                                modifier = Modifier.fillMaxWidth()
-//                            )
                             Box {
                                 TextButton(onClick = { expanded.value = true }) {
                                     Text(text = selectedMonth.value.ifEmpty { "Choose Month" })
@@ -387,11 +369,3 @@ fun BalanceRow(modifier: Modifier = Modifier,balance:Int) {
         }
     }
 }
-
-//@Preview
-//@Composable
-//fun HomeScreenPreview(modifier: Modifier = Modifier) {
-//    WalletWardenTheme {
-//        HomeScreen(rememberNavController())
-//    }
-//}
