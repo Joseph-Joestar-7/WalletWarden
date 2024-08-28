@@ -47,6 +47,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -75,6 +76,7 @@ import com.example.walletwarden.ui.theme.tertiaryDarkMediumContrast
 import com.example.walletwarden.ui.theme.tertiaryLight
 import com.example.walletwarden.viewmodels.HomeViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -85,6 +87,7 @@ fun HomeScreen(navController: NavController,homeViewModel: HomeViewModel) {
     val isAdding= remember {
         mutableStateOf(false)
     }
+    val scope= rememberCoroutineScope()
     val balance by derivedStateOf {
         var totalBalance = 0
         allMonths.forEach { month ->
@@ -282,7 +285,9 @@ fun HomeScreen(navController: NavController,homeViewModel: HomeViewModel) {
                         onDelete = {showDeleteConfirmationDialog.value=true},
                         onEdit = {showEditConfirmationDialog.value=true},
                         onForward = {
-                            navController.navigate(Screen.MonthExpense.createRoute(monthEntity.id))
+                            scope.launch {
+                                navController.navigate(Screen.MonthExpense.createRoute(monthEntity.id))
+                            }
                         })
                 }
             }
@@ -337,7 +342,7 @@ fun MonthItem(monthEntity: MonthEntity,
                     IconButton(onClick = onEdit) {
                         Icon(painter = painterResource(R.drawable.baseline_create_24), contentDescription = "Edit")
                     }
-                    IconButton(onClick = onForward) {
+                    IconButton(onClick =onForward) {
                         Icon(painter = painterResource(R.drawable.baseline_arrow_forward_ios_24), contentDescription = "Forward")
                     }
                 }
