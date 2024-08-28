@@ -261,26 +261,6 @@ fun MonthScreen(navController: NavHostController, monthId: Int, homeViewModel: H
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ExpenseDatePickerDialog(onDateSelected:(date:Long)->Unit,
-                            onDismiss:()->Unit)
-{
-    val datePickerState= rememberDatePickerState()
-    val selectedDate= datePickerState.selectedDateMillis?:0
-    DatePickerDialog(onDismissRequest = { onDismiss() },
-        confirmButton = { TextButton(onClick = { onDateSelected(selectedDate)}) {
-            Text(text="Confirm")
-        }
-        }, dismissButton ={ TextButton(onClick = { onDateSelected(selectedDate)}) {
-            Text(text="Cancel")
-        }
-        } ) {
-        DatePicker(state = datePickerState)
-
-    }
-}
-
 @Composable
 fun ExpenseItem(expenseEntity: ExpenseEntity,
                 onDelete:()->Unit,
