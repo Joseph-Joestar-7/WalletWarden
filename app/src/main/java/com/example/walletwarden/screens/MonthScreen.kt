@@ -57,14 +57,16 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.example.expensetracker.Dates
 import com.example.walletwarden.R
 import com.example.walletwarden.database.ExpenseEntity
 import com.example.walletwarden.ui.theme.tertiaryLight
 import com.example.walletwarden.viewmodels.HomeViewModel
 import com.example.walletwarden.viewmodels.MonthScreenViewModel
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -165,10 +167,9 @@ fun MonthScreen(navController: NavHostController, monthId: Int, homeViewModel: H
                 var itemName by remember { mutableStateOf("") }
                 var expenseType by remember { mutableStateOf("") }
                 var amt by remember { mutableStateOf("") }
-                var date:Date= Date()
-                val dateDialogVisibility= remember{ mutableStateOf(false) }
+
                 AlertDialog(onDismissRequest = { isAddingIncome=false
-                                               isAddingIncome=false},
+                                               isAddingExpense=false},
                     title = {
                         Text(text = if(isAddingIncome) "Ayo Congo you got an income?"
                         else "Blud can't stop spending")
@@ -180,11 +181,11 @@ fun MonthScreen(navController: NavHostController, monthId: Int, homeViewModel: H
                                 onValueChange = {itemName=it},
                                 label = { Text("ADD ITEM NAME") },
                                 keyboardOptions = KeyboardOptions.Default.copy(
-                                    keyboardType = KeyboardType.Number
+                                    keyboardType = KeyboardType.Text
                                 ),
                                 modifier = Modifier.fillMaxWidth()
                             )
-                            if(isAddingIncome)
+                            if(isAddingExpense)
                             {
                                 Box {
                                     TextButton(onClick = { expanded.value = true }) {
@@ -213,7 +214,7 @@ fun MonthScreen(navController: NavHostController, monthId: Int, homeViewModel: H
                                 ),
                                 modifier = Modifier.fillMaxWidth()
                             )
-//
+
                         }
                     },
                     confirmButton = {Button(
@@ -226,20 +227,20 @@ fun MonthScreen(navController: NavHostController, monthId: Int, homeViewModel: H
                                 icon=R.drawable.icon_rupees
                             viewModel.addExpense(
                                 name=itemName,
-                                date=date,
+                                date=Date(),
                                 amount=amount,
                                 icon=icon,
                                 isExpense = isAddingExpense
                             )
                             isAddingIncome=false
-                            isAddingIncome=false
+                            isAddingExpense=false
                         }
                     ){
                         Text(text="ADD")
                     } },
                     dismissButton = { Button(onClick = {
                         isAddingIncome = false
-                        isAddingIncome = false
+                        isAddingExpense = false
                     }) {
                         Text(text = "CANCEL")
                     }})
