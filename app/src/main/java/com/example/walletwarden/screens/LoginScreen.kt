@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
+import com.example.walletwarden.Utils.saveUserData
 
 @Composable
 fun LoginScreen() {
@@ -52,7 +53,7 @@ fun LoginScreen() {
             Button(onClick ={if(userName.isBlank()||userBalance==0)
                 Toast.makeText(context, "Atleast set up the account properly", Toast.LENGTH_SHORT).show()
                 else {
-
+                    saveUserData(context,name=userName, balance = userBalance)
             } })
             {
 
