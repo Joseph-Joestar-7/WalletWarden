@@ -1,5 +1,6 @@
 package com.example.walletwarden.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -221,12 +222,20 @@ fun MonthScreen(navController: NavHostController, monthId: Int, homeViewModel: H
                     },
                     confirmButton = {Button(
                         onClick = {
+                            if(expenseType.isBlank()) {
+                                scope.launch {
+                                    Toast.makeText(context, "Enter the type of expense, Baka", Toast.LENGTH_SHORT)
+                                        .show()
+                                }
+                            }
+                            else{
+                            scope.launch {
                             val amount=amt.toInt()
                             var icon:Int=0
-                            if(isAddingExpense)
-                               icon= expenseMap[expenseType]!!
+                            icon = if(isAddingExpense)
+                                expenseMap[expenseType]!!
                             else
-                                icon=R.drawable.icon_rupees
+                                R.drawable.icon_rupees
                             viewModel.addExpense(
                                 name=itemName,
                                 date=Date(),
@@ -236,6 +245,9 @@ fun MonthScreen(navController: NavHostController, monthId: Int, homeViewModel: H
                             )
                             isAddingIncome=false
                             isAddingExpense=false
+                        }
+                            }
+
                         }
                     ){
                         Text(text="ADD")
@@ -268,7 +280,9 @@ fun ExpenseItem(expenseEntity: ExpenseEntity,
                 onDelete:()->Unit,
                 onEdit:()->Unit,){
 
-    Card(modifier = Modifier.padding(8.dp)) {
+    Card(modifier = Modifier.padding(8.dp),
+        shape = RoundedCornerShape(20.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 20.dp)) {
         Column {
             Row(
                 modifier = Modifier
@@ -297,46 +311,4 @@ fun ExpenseItem(expenseEntity: ExpenseEntity,
     }
 }
 
-//@Composable
-//fun ExpenseItem(expenseEntity: ExpenseEntity,
-//                onDelete:()->Unit,
-//                onEdit:()->Unit,
-//                ) {
-//    Column(modifier = Modifier
-//        .fillMaxWidth()
-//        .padding(horizontal = 8.dp)
-//        .clip(RoundedCornerShape(5.dp))
-//        .background(color = tertiaryLight)
-//    ){
-//        Card(modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(8.dp),
-//            shape = RoundedCornerShape(20.dp),
-//            elevation = CardDefaults.cardElevation(defaultElevation = 20.dp),
-//        ){
-//            Row(verticalAlignment = Alignment.CenterVertically,
-//                horizontalArrangement = Arrangement.SpaceBetween,
-//                modifier = Modifier
-//                    .padding(16.dp)
-//                    .fillMaxSize()){
-//                Image(painter = painterResource(expenseEntity.icon) , contentDescription =null )
-//                Column {
-//                    Text(text= expenseEntity.name,
-//                        color = if(expenseEntity.isExpense) Color.Red
-//                    else Color.Green)
-//                    Text(text = expenseEntity.amount.toString())
-//                }
-//                Column {
-//                    IconButton(onClick = onEdit) {
-//                        Icon(painter = painterResource(R.drawable.baseline_create_24 ), contentDescription =null )
-//                    }
-//                    IconButton(onClick = onDelete) {
-//                        Icon(painter = painterResource(R.drawable.baseline_delete_24 ), contentDescription =null )
-//                    }
-//                }
-//            }
-//        }
-//    }
-//
-//}
 
