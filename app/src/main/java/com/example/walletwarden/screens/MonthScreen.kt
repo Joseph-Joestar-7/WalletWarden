@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -51,6 +52,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -264,26 +266,18 @@ fun MonthScreen(navController: NavHostController, monthId: Int, homeViewModel: H
 @Composable
 fun ExpenseItem(expenseEntity: ExpenseEntity,
                 onDelete:()->Unit,
-                onEdit:()->Unit,
-                ) {
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .padding(horizontal = 8.dp)
-        .clip(RoundedCornerShape(5.dp))
-        .background(color = tertiaryLight)
-    ){
-        Card(modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-            shape = RoundedCornerShape(20.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 20.dp),
-        ){
-            Row(verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
+                onEdit:()->Unit,){
+
+    Card(modifier = Modifier.padding(8.dp)) {
+        Column {
+            Row(
                 modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxSize()){
-                Image(painter = painterResource(expenseEntity.icon) , contentDescription =null )
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,)
+            {
+                Image(painter = painterResource(expenseEntity.icon) , contentDescription =null,
+                    modifier = Modifier.size(64.dp))
                 Column {
                     Text(text= expenseEntity.name,
                         color = if(expenseEntity.isExpense) Color.Red
@@ -301,6 +295,48 @@ fun ExpenseItem(expenseEntity: ExpenseEntity,
             }
         }
     }
-
 }
+
+//@Composable
+//fun ExpenseItem(expenseEntity: ExpenseEntity,
+//                onDelete:()->Unit,
+//                onEdit:()->Unit,
+//                ) {
+//    Column(modifier = Modifier
+//        .fillMaxWidth()
+//        .padding(horizontal = 8.dp)
+//        .clip(RoundedCornerShape(5.dp))
+//        .background(color = tertiaryLight)
+//    ){
+//        Card(modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(8.dp),
+//            shape = RoundedCornerShape(20.dp),
+//            elevation = CardDefaults.cardElevation(defaultElevation = 20.dp),
+//        ){
+//            Row(verticalAlignment = Alignment.CenterVertically,
+//                horizontalArrangement = Arrangement.SpaceBetween,
+//                modifier = Modifier
+//                    .padding(16.dp)
+//                    .fillMaxSize()){
+//                Image(painter = painterResource(expenseEntity.icon) , contentDescription =null )
+//                Column {
+//                    Text(text= expenseEntity.name,
+//                        color = if(expenseEntity.isExpense) Color.Red
+//                    else Color.Green)
+//                    Text(text = expenseEntity.amount.toString())
+//                }
+//                Column {
+//                    IconButton(onClick = onEdit) {
+//                        Icon(painter = painterResource(R.drawable.baseline_create_24 ), contentDescription =null )
+//                    }
+//                    IconButton(onClick = onDelete) {
+//                        Icon(painter = painterResource(R.drawable.baseline_delete_24 ), contentDescription =null )
+//                    }
+//                }
+//            }
+//        }
+//    }
+//
+//}
 
