@@ -11,3 +11,10 @@ fun saveUserData(context: Context, name: String, balance:Int) {
     editor.putInt("userBalance",balance)
     editor.apply()
 }
+
+fun isUserDataAvailable(context: Context): Boolean {
+    val sharedPreferences: SharedPreferences =
+        context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+    return sharedPreferences.contains("userName") &&
+            sharedPreferences.contains("userBalance")
+}
