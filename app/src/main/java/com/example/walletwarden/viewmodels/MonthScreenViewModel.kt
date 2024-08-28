@@ -1,6 +1,7 @@
 package com.example.walletwarden.viewmodels
 
 import android.content.Context
+import androidx.compose.runtime.MutableState
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -9,12 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.walletwarden.database.ExpenseDatabase
 import com.example.walletwarden.database.ExpenseEntity
 import com.example.walletwarden.database.ExpenseRepository
-import com.example.walletwarden.database.MonthEntity
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Date
 
@@ -38,11 +34,14 @@ class MonthScreenViewModel(private val repository: ExpenseRepository, private va
         return year ?: 0
     }
 
-    fun addExpense(name: String, date: Date, amount: Int,
-                   icon:Int,isExpense:Boolean) {
+    fun addExpense(
+        name: String,date: Date,
+         amount: Int,
+        icon:Int, isExpense:Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
-            val newExpense = ExpenseEntity(monthId = monthId, name = name, date = date,
-                amount = amount,icon=icon, isExpense = isExpense)
+            val newExpense = ExpenseEntity(
+                monthId = monthId, name = name, date = date,
+                amount = amount, icon =icon, isExpense = isExpense)
             repository.insert(newExpense)
         }
     }

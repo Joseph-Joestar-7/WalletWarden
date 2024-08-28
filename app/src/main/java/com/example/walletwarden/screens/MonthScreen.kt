@@ -17,6 +17,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -50,6 +51,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -62,6 +64,7 @@ import com.example.walletwarden.ui.theme.tertiaryLight
 import com.example.walletwarden.viewmodels.HomeViewModel
 import com.example.walletwarden.viewmodels.MonthScreenViewModel
 import kotlinx.coroutines.launch
+import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -159,10 +162,10 @@ fun MonthScreen(navController: NavHostController, monthId: Int, homeViewModel: H
             if(isAddingIncome || isAddingExpense)
             {
                 val expanded = remember { mutableStateOf(false) }
-                var itemName:String=""
-                var incometype:String=""
-                var amt:String=""
-                val date= remember { mutableStateOf(0L) }
+                var itemName by remember { mutableStateOf("") }
+                var expenseType by remember { mutableStateOf("") }
+                var amt by remember { mutableStateOf("") }
+                var date:Date= Date()
                 val dateDialogVisibility= remember{ mutableStateOf(false) }
                 AlertDialog(onDismissRequest = { isAddingIncome=false
                                                isAddingIncome=false},
@@ -193,7 +196,7 @@ fun MonthScreen(navController: NavHostController, monthId: Int, homeViewModel: H
                                             DropdownMenuItem(
                                                 text = { Text(text =expense) },
                                                 onClick = {
-                                                    incometype= expense
+                                                    expenseType= expense
                                                     expanded.value = false
                                                 }
                                             )
@@ -210,25 +213,36 @@ fun MonthScreen(navController: NavHostController, monthId: Int, homeViewModel: H
                                 ),
                                 modifier = Modifier.fillMaxWidth()
                             )
-                            OutlinedTextField(value =if(date.value ==0L)"" else Dates.formatDateToHumanReadableForm(date.value),
-                                onValueChange ={}, modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable { dateDialogVisibility.value = true },enabled = false,
-                                colors= OutlinedTextFieldDefaults.colors(
-                                    disabledBorderColor = Color.Black,
-                                    disabledTextColor = Color.Black
-                                ))
-                            if (dateDialogVisibility.value)
-                                ExpenseDatePickerDialog(onDateSelected ={date.value=it
-                                    dateDialogVisibility.value=false} ,
-                                    onDismiss = {dateDialogVisibility.value=false})
-
+//
                         }
-
-
                     },
-
-                    confirmButton = { /*TODO*/ })
+                    confirmButton = {Button(
+                        onClick = {
+                            val amount=amt.toInt()
+                            var icon:Int=0
+                            if(isAddingExpense)
+                               icon= expenseMap[expenseType]!!
+                            else
+                                icon=R.drawable.icon_rupees
+                            viewModel.addExpense(
+                                name=itemName,
+                                date=date,
+                                amount=amount,
+                                icon=icon,
+                                isExpense = isAddingExpense
+                            )
+                            isAddingIncome=false
+                            isAddingIncome=false
+                        }
+                    ){
+                        Text(text="ADD")
+                    } },
+                    dismissButton = { Button(onClick = {
+                        isAddingIncome = false
+                        isAddingIncome = false
+                    }) {
+                        Text(text = "CANCEL")
+                    }})
             }
             FloatingActionButton(modifier= Modifier
                 .padding(8.dp)
@@ -288,7 +302,7 @@ fun ExpenseItem(expenseEntity: ExpenseEntity,
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxSize()){
-                Image(painter = , contentDescription = )
+                Image(painter = painterResource(expenseEntity.icon) , contentDescription =null )
                 Column {
                     Text(text= expenseEntity.name,
                         color = if(expenseEntity.isExpense) Color.Red
@@ -297,10 +311,10 @@ fun ExpenseItem(expenseEntity: ExpenseEntity,
                 }
                 Column {
                     IconButton(onClick = onEdit) {
-                        Icon(painter = , contentDescription = )
+                        Icon(painter = painterResource(R.drawable.baseline_create_24 ), contentDescription =null )
                     }
                     IconButton(onClick = onDelete) {
-                        Icon(painter = , contentDescription = )
+                        Icon(painter = painterResource(R.drawable.baseline_delete_24 ), contentDescription =null )
                     }
                 }
             }

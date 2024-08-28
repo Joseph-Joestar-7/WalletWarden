@@ -18,7 +18,7 @@ interface ExpenseDao {
     @Query("SELECT * FROM expenses WHERE monthId = :monthId")
     fun getExpensesForMonth(monthId: Int): Flow<List<ExpenseEntity>>
 
-    @Query("SELECT SUM(CASE WHEN category = 'Income' THEN amount ELSE -amount END) FROM expenses WHERE monthId = :monthId")
+    @Query("SELECT SUM(CASE WHEN isExpense = 1 THEN amount ELSE -amount END) FROM expenses WHERE monthId = :monthId")
     fun getTotalExpenseForMonth(monthId: Int): Flow<Int>
 
     @Query("SELECT month FROM months WHERE id = :monthId")
