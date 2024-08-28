@@ -154,11 +154,11 @@ fun MonthScreen(navController: NavHostController, monthId: Int, homeViewModel: H
                 ){
                     Column {
                         TextButton(onClick = { isAddingExpense = true
-                            scope.launch { sheetState.hide() } }) {
+                            scope.launch { showBottomSheet=false} }) {
                             Text(text = "Add Expense")
                         }
                         TextButton(onClick = { isAddingIncome = true
-                            scope.launch { sheetState.hide() } }) {
+                            scope.launch { showBottomSheet=false } }) {
                             Text(text = "Add Income")
                         }
                     }
