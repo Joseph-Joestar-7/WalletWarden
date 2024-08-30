@@ -20,3 +20,9 @@ fun isUserDataAvailable(context: Context): Boolean {
             sharedPreferences.contains("userBalance") &&
             sharedPreferences.contains("userWalletBalance")
 }
+
+fun getUserName(context: Context): String? {
+    val sharedPreferences: SharedPreferences =
+        context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+    return sharedPreferences.getString("userName", null)
+}
