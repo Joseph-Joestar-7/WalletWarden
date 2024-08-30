@@ -17,5 +17,6 @@ fun isUserDataAvailable(context: Context): Boolean {
     val sharedPreferences: SharedPreferences =
         context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
     return sharedPreferences.contains("userName") &&
-            sharedPreferences.contains("userBalance")
+            sharedPreferences.contains("userBalance") &&
+            sharedPreferences.contains("userWalletBalance")
 }
