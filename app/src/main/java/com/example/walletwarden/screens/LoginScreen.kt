@@ -64,9 +64,15 @@ fun LoginScreen(navController: NavController) {
                 else {
                     saveUserData(context,name=userName, balance = userBalance,
                         wBalance = userWalletBalance)
+                navController.navigate(Screen.Home.route){
+                    popUpTo(Screen.Login.route) {
+                        inclusive = true
+                    }
+                    launchSingleTop = true
+                }
             } })
             {
-
+                Text(text = "Save and Continue")
             }
         }
     }
