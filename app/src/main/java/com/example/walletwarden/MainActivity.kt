@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
                         )
                     )
                 )
-                  NavHostScreen(navController=rememberNavController(),homeViewModel)
+                  NavHostScreen(navController=rememberNavController(),homeViewModel, LocalContext.current)
                 }
             }
         }

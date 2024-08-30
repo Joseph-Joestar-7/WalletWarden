@@ -1,11 +1,13 @@
 package com.example.walletwarden.screens
 
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.walletwarden.utils.isUserDataAvailable
 import com.example.walletwarden.viewmodels.HomeViewModel
 
 sealed class Screen(val route: String) {
@@ -17,7 +19,12 @@ sealed class Screen(val route: String) {
 }
 
 @Composable
-fun NavHostScreen(navController: NavHostController,homeViewModel: HomeViewModel) {
+fun NavHostScreen(navController: NavHostController,homeViewModel: HomeViewModel,context: Context) {
+    val startDestination = if (isUserDataAvailable(context)) {
+        Screen.Home.route
+    } else {
+        Screen.Login.route
+    }
     NavHost(
         navController = navController,
         startDestination = Screen.Home.route
