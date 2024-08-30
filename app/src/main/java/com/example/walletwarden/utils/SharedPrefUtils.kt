@@ -48,6 +48,7 @@ fun updateUserName(context:Context, name:String){
     editor.putString("userName", name)
 }
 
+@SuppressLint("CommitPrefEdits")
 fun updateUserBalance(context:Context, balance:Int){
     val sharedPreferences: SharedPreferences =
         context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
@@ -55,6 +56,7 @@ fun updateUserBalance(context:Context, balance:Int){
     editor.putInt("userBalance", balance)
 }
 
+@SuppressLint("CommitPrefEdits")
 fun updateUserWalletBalance(context:Context, balance:Int){
     val sharedPreferences: SharedPreferences =
         context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
