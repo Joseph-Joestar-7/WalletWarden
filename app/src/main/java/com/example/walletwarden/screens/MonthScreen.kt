@@ -129,13 +129,13 @@ fun MonthScreen(navController: NavHostController, monthId: Int, homeViewModel: H
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 })
-            BalanceRow(balance = monthlyBalance, modifier = Modifier.constrainAs(balanceRow){
-                top.linkTo(topBar.bottom, margin = 10.dp)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-            })
+//            BalanceRow(balance = monthlyBalance, modifier = Modifier.constrainAs(balanceRow){
+//                top.linkTo(topBar.bottom, margin = 10.dp)
+//                start.linkTo(parent.start)
+//                end.linkTo(parent.end)
+//            })
             LazyColumn(modifier=Modifier.constrainAs(cards){
-                top.linkTo(balanceRow.bottom)
+                top.linkTo(topBar.bottom)
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
             }){
