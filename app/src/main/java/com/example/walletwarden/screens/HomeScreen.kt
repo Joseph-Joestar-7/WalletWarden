@@ -357,11 +357,10 @@ fun DetailsRow(modifier: Modifier = Modifier,context: Context) {
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 10.dp)
-            .height(50.dp)
+            
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
+        Column(
+
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxSize()
