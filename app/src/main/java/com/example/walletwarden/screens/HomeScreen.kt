@@ -1,5 +1,6 @@
 package com.example.walletwarden.screens
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.TweenSpec
@@ -74,6 +75,9 @@ import com.example.walletwarden.ui.theme.secondaryContainerLightHighContrast
 import com.example.walletwarden.ui.theme.secondaryDark
 import com.example.walletwarden.ui.theme.tertiaryDarkMediumContrast
 import com.example.walletwarden.ui.theme.tertiaryLight
+import com.example.walletwarden.utils.getUserBalance
+import com.example.walletwarden.utils.getUserName
+import com.example.walletwarden.utils.getUserWalletBalance
 import com.example.walletwarden.viewmodels.HomeViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -88,13 +92,6 @@ fun HomeScreen(navController: NavController,homeViewModel: HomeViewModel) {
         mutableStateOf(false)
     }
     val scope= rememberCoroutineScope()
-    val balance by derivedStateOf {
-        var totalBalance = 0
-        allMonths.forEach { month ->
-            totalBalance += month.monthlyexp
-        }
-        totalBalance
-    }
     val expanded = remember { mutableStateOf(false) }
     val selectedMonth = remember { mutableStateOf("") }
     val selectedMonthNo = remember { mutableIntStateOf(0) }
@@ -108,7 +105,7 @@ fun HomeScreen(navController: NavController,homeViewModel: HomeViewModel) {
     }
     Surface(modifier = Modifier.fillMaxSize()) {
         ConstraintLayout {
-            val(topBar,balanceRow,cards,add)=createRefs()
+            val(topBar,detailsRow,cards,add)=createRefs()
             CenterAlignedTopAppBar(title = {
                 Text(text = stringResource(R.string.app_name),
                     style =MaterialTheme.typography.displayMedium,
@@ -120,7 +117,7 @@ fun HomeScreen(navController: NavController,homeViewModel: HomeViewModel) {
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 })
-            BalanceRow(balance=balance,modifier=Modifier.constrainAs(balanceRow){
+            DetailsRow(context=context,modifier=Modifier.constrainAs(detailsRow){
                 top.linkTo(topBar.bottom)
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
@@ -191,7 +188,7 @@ fun HomeScreen(navController: NavController,homeViewModel: HomeViewModel) {
                     })
             }
             LazyColumn(modifier=Modifier.constrainAs(cards){
-                top.linkTo(balanceRow.bottom)
+                top.linkTo(detailsRow.bottom)
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
             }) {
@@ -354,7 +351,7 @@ fun MonthItem(monthEntity: MonthEntity,
 }
 
 @Composable
-fun BalanceRow(modifier: Modifier = Modifier,balance:Int) {
+fun DetailsRow(modifier: Modifier = Modifier,context: Context) {
 
     Card(
         modifier = modifier
@@ -369,8 +366,9 @@ fun BalanceRow(modifier: Modifier = Modifier,balance:Int) {
                 .padding(16.dp)
                 .fillMaxSize()
         ) {
-                Text(text= stringResource(R.string.Current_Balance))
-                Text(text = balance.toString())
+                Text(text="Welcome ${getUserName(context)}")
+                Text(text ="Your balance: ${getUserBalance(context)}")
+            Text(text="Your wallet balance: ${getUserWalletBalance(context)}")
         }
     }
 }
