@@ -29,6 +29,9 @@ fun NavHostScreen(navController: NavHostController,homeViewModel: HomeViewModel,
         navController = navController,
         startDestination = startDestination
     ){
+        composable(Screen.Login.route) {
+            LoginScreen(navController)
+        }
         composable(Screen.Home.route) {
             HomeScreen(navController,homeViewModel)
         }
