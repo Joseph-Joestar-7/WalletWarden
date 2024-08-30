@@ -1,5 +1,6 @@
 package com.example.walletwarden.utils
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 
@@ -37,4 +38,19 @@ fun getUserWalletBalance(context: Context): Int {
     val sharedPreferences: SharedPreferences =
         context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
     return sharedPreferences.getInt("userWalletBalance", 0)
+}
+
+@SuppressLint("CommitPrefEdits")
+fun updateUserName(context:Context, name:String){
+    val sharedPreferences: SharedPreferences =
+        context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+    val editor = sharedPreferences.edit()
+    editor.putString("userName", name)
+}
+
+fun updateUserBalance(context:Context, balance:Int){
+    val sharedPreferences: SharedPreferences =
+        context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+    val editor = sharedPreferences.edit()
+    editor.putInt("userBalance", balance)
 }
