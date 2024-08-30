@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -357,13 +358,12 @@ fun DetailsRow(modifier: Modifier = Modifier,context: Context) {
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 10.dp)
-            
-    ) {
-        Column(
 
-            modifier = Modifier
+    ) {
+        Column(modifier = Modifier
                 .padding(16.dp)
-                .fillMaxSize()
+                .fillMaxWidth()
+            .wrapContentHeight()
         ) {
                 Text(text="Welcome ${getUserName(context)}")
                 Text(text ="Your balance: ${getUserBalance(context)}")
