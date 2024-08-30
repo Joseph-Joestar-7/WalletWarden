@@ -9,6 +9,7 @@ import androidx.navigation.navArgument
 import com.example.walletwarden.viewmodels.HomeViewModel
 
 sealed class Screen(val route: String) {
+    object Login : Screen("login")
     object Home : Screen("home")
     object MonthExpense : Screen("month_expense/{monthId}") {
         fun createRoute(monthId: Int) = "month_expense/$monthId"
