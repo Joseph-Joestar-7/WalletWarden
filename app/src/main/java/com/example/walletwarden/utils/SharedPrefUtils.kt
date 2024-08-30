@@ -54,3 +54,10 @@ fun updateUserBalance(context:Context, balance:Int){
     val editor = sharedPreferences.edit()
     editor.putInt("userBalance", balance)
 }
+
+fun updateUserWalletBalance(context:Context, balance:Int){
+    val sharedPreferences: SharedPreferences =
+        context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+    val editor = sharedPreferences.edit()
+    editor.putInt("userWalletBalance", balance)
+}
