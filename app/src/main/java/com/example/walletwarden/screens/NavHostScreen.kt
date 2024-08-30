@@ -27,7 +27,7 @@ fun NavHostScreen(navController: NavHostController,homeViewModel: HomeViewModel,
     }
     NavHost(
         navController = navController,
-        startDestination = Screen.Home.route
+        startDestination = startDestination
     ){
         composable(Screen.Home.route) {
             HomeScreen(navController,homeViewModel)
