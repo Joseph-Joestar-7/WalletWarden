@@ -35,6 +35,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -128,6 +129,23 @@ fun HomeScreen(navController: NavController,homeViewModel: HomeViewModel) {
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
             })
+            if (showBottomSheet){
+                ModalBottomSheet(
+                    onDismissRequest = {
+                        showBottomSheet = false
+                    },
+                    sheetState = sheetState
+                ){
+                    Column {
+                        TextButton(onClick = {isAdding.value=true}) {
+                            Text(text = "Add new Month")
+                        }
+                        TextButton(onClick = {}) {
+                            Text(text = "")
+                        }
+                    }
+                }
+            }
             if(isAdding.value)
             {
                 AlertDialog(
@@ -299,7 +317,7 @@ fun HomeScreen(navController: NavController,homeViewModel: HomeViewModel) {
                 .constrainAs(add) {
                     top.linkTo(cards.bottom)
                     end.linkTo(parent.end)
-                },onClick = {isAdding.value=true }) {
+                },onClick = {showBottomSheet=true}) {
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = "Add"
