@@ -36,6 +36,7 @@ fun LoginScreen() {
         ) {
             var userName by remember { mutableStateOf("") }
             var userBalance by remember { mutableIntStateOf(0) }
+            var userWalletBalance by remember { mutableIntStateOf(0) }
             OutlinedTextField(value = userName,
                 onValueChange ={ userName=it },
                 label={Text(text = "Need your username")},
@@ -50,10 +51,18 @@ fun LoginScreen() {
                     keyboardType = KeyboardType.Number
                 ),
                 modifier = Modifier.fillMaxWidth())
+            OutlinedTextField(value = userWalletBalance.toString(),
+                onValueChange ={ userWalletBalance=it.toInt() },
+                label={Text(text = "Need your current wallet balance")},
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Number
+                ),
+                modifier = Modifier.fillMaxWidth())
             Button(onClick ={if(userName.isBlank()||userBalance==0)
                 Toast.makeText(context, "Atleast set up the account properly", Toast.LENGTH_SHORT).show()
                 else {
-                    saveUserData(context,name=userName, balance = userBalance)
+                    saveUserData(context,name=userName, balance = userBalance,
+                        wBalance = userWalletBalance)
             } })
             {
 
