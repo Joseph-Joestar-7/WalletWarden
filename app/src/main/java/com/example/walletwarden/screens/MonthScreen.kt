@@ -222,7 +222,7 @@ fun MonthScreen(navController: NavHostController, monthId: Int, homeViewModel: H
                     },
                     confirmButton = {Button(
                         onClick = {
-                            if(expenseType.isBlank()) {
+                            if(expenseType.isBlank()&&isAddingExpense) {
                                 scope.launch {
                                     Toast.makeText(context, "Enter the type of expense, Baka", Toast.LENGTH_SHORT)
                                         .show()
