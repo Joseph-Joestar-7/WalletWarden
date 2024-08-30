@@ -42,6 +42,7 @@ fun LoginScreen(navController: NavController) {
             Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(8.dp)
             ) {
                 var userName by remember { mutableStateOf("") }
                 var userBalance by remember { mutableIntStateOf(0) }
