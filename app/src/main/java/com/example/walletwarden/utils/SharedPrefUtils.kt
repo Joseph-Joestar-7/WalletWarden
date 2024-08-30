@@ -26,3 +26,15 @@ fun getUserName(context: Context): String? {
         context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
     return sharedPreferences.getString("userName", null)
 }
+
+fun getUserBalance(context: Context): Int {
+    val sharedPreferences: SharedPreferences =
+        context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+    return sharedPreferences.getInt("userBalance", 0)
+}
+
+fun getUserWalletBalance(context: Context): Int {
+    val sharedPreferences: SharedPreferences =
+        context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+    return sharedPreferences.getInt("userWalletBalance", 0)
+}
