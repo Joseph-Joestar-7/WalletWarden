@@ -21,7 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
-import com.example.walletwarden.Utils.saveUserData
+import com.example.walletwarden.utils.saveUserData
 
 @Composable
 fun LoginScreen() {
