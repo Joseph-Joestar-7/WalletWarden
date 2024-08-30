@@ -21,10 +21,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.navigation.NavController
 import com.example.walletwarden.utils.saveUserData
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(navController: NavController) {
     val context: Context = LocalContext.current
     Box(
         modifier = Modifier.fillMaxSize(),
